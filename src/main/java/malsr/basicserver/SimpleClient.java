@@ -1,6 +1,5 @@
 package malsr.basicserver;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -13,9 +12,10 @@ public class SimpleClient {
             Socket socket = new Socket("localhost", 2003);
 
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-            writer.write(" Why Hello this is a simple server example");
+            writer.write("Why Hello this is a simple server example");
             writer.write("\nWhy again Hello this is a simple server example");
             writer.write("\nWhy this is a simple server example");
+            writer.write("\nanother sentence here we go");
 
 //            DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
 //            outToServer.writeChars("Why Hello this is a simple server example");
