@@ -19,14 +19,18 @@ public class SimpleServer {
         //Creates a server bound to port 2003
         ServerSocket serverSocket = new ServerSocket(2003);
 
-        try (Socket accept = serverSocket.accept()) {
-            InputStream inputStream = accept.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-            while (bufferedReader.read() != -1) {
-                //first character is cutoff because already reading a char first
-                LOGGER.info(bufferedReader.readLine());
+        try {
+            while (true) {
+                Socket accept = serverSocket.accept();
+                InputStream inputStream = accept.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                while (bufferedReader.read() != -1) {
+                    //first character is cutoff because already reading a char first
+                    LOGGER.info(bufferedReader.readLine());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
