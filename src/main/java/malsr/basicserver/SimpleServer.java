@@ -14,23 +14,28 @@ public class SimpleServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleServer.class);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+
+        boolean runContinuous = true;
 
         //Creates a server bound to port 2003
-        ServerSocket serverSocket = new ServerSocket(2003);
+        try (ServerSocket serverSocket = new ServerSocket(2003)) {
+            while (runContinuous) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    InputStream inputStream = socket.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        try {
-            while (true) {
-                Socket accept = serverSocket.accept();
-                InputStream inputStream = accept.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                while (bufferedReader.read() != -1) {
-                    //first character is cutoff because already reading a char first
-                    LOGGER.info(bufferedReader.readLine());
+                    while (bufferedReader.read() != -1) {
+                        //first character is cutoff because already reading a char first
+                        LOGGER.info(bufferedReader.readLine());
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("Error occurred while reading stream", e);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.warn("Server encountered an error", e);
         }
     }
 }
