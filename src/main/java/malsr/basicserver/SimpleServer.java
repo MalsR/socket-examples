@@ -3,10 +3,7 @@ package malsr.basicserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -19,7 +16,8 @@ public class SimpleServer {
         boolean runContinuous = true;
 
         //Creates a server bound to port 2003
-        try (ServerSocket serverSocket = new ServerSocket(2003)) {
+        try (
+                ServerSocket serverSocket = new ServerSocket(2003)) {
             while (runContinuous) {
                 try {
                     Socket socket = serverSocket.accept();
@@ -29,6 +27,9 @@ public class SimpleServer {
                     while (bufferedReader.read() != -1) {
                         //first character is cutoff because already reading a char first
                         LOGGER.info(bufferedReader.readLine());
+                        PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+                        printWriter.println("Ok Fine we got you");
+                        printWriter.flush();
                     }
                 } catch (Exception e) {
                     LOGGER.warn("Error occurred while reading stream", e);
