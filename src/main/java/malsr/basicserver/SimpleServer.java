@@ -15,9 +15,9 @@ public class SimpleServer {
 
         boolean keepListening = true;
 
-        //Creates a server bound to port 2003
         try (
                 ServerSocket serverSocket = new ServerSocket(2003)) {
+                //Creates a server bound to port 2003
 
             while (keepListening) {
                 try (
@@ -30,10 +30,12 @@ public class SimpleServer {
                     PrintWriter printWriter = new PrintWriter(outputStream);
                     LOGGER.info("Connected to Client on Remote address {}", socket.getRemoteSocketAddress());
 
-                    while (bufferedReader.read() != -1) {
+                    String clientInput;
+
+                    while ((clientInput = bufferedReader.readLine()) != null) {
                         //first character is cutoff because already reading a char first
-                        LOGGER.info(bufferedReader.readLine());
-                        printWriter.println("Ok Fine we got you");
+                        LOGGER.info(clientInput);
+                        printWriter.println("You said " + "\"" + clientInput + "\"");
                         printWriter.flush();
                     }
                 } catch (Exception e) {

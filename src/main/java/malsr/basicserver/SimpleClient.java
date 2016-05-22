@@ -16,20 +16,20 @@ public class SimpleClient {
                 Socket socket = new Socket("localhost", 2003);
                 OutputStream outputStream = socket.getOutputStream();
                 InputStream inputStream = socket.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
         ) {
-
             LOGGER.info("Connection established with server {}", socket.getRemoteSocketAddress());
 
             PrintWriter writer = new PrintWriter(outputStream, true);
-            writer.write("Why Hello this is a simple server example");
-            writer.write("\nWhy again Hello this is a simple server example");
-            writer.write("\nWhy this is a simple server example");
-            writer.write("\nanother sentence here we go");
+            writer.println("Why Hello this is a simple server example");
+            writer.println("Why again Hello this is a simple server example");
+            writer.println("Why this is a simple server example");
+            writer.println("another sentence here we go");
 
-            writer.flush();
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            System.out.println(bufferedReader.readLine());
+            String serverInput;
+            while ((serverInput = bufferedReader.readLine()) != null) {
+                LOGGER.info(serverInput);
+            }
         } catch (IOException e) {
             LOGGER.warn("Encountered error while talking to server", e);
         }
