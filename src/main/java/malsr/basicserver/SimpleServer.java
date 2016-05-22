@@ -13,21 +13,26 @@ public class SimpleServer {
 
     public static void main(String[] args) {
 
-        boolean runContinuous = true;
+        boolean keepListening = true;
 
         //Creates a server bound to port 2003
         try (
                 ServerSocket serverSocket = new ServerSocket(2003)) {
-            while (runContinuous) {
-                try {
-                    Socket socket = serverSocket.accept();
-                    InputStream inputStream = socket.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            while (keepListening) {
+                try (
+                        Socket socket = serverSocket.accept();
+                        InputStream inputStream = socket.getInputStream();
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                        OutputStream outputStream = socket.getOutputStream();
+                ) {
+
+                    PrintWriter printWriter = new PrintWriter(outputStream);
+                    LOGGER.info("Connected to Client on Remote address {}", socket.getRemoteSocketAddress());
 
                     while (bufferedReader.read() != -1) {
                         //first character is cutoff because already reading a char first
                         LOGGER.info(bufferedReader.readLine());
-                        PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
                         printWriter.println("Ok Fine we got you");
                         printWriter.flush();
                     }
