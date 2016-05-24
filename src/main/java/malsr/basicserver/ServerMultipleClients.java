@@ -10,15 +10,21 @@ public class ServerMultipleClients {
     public static void main(String[] args) {
             try (final ServerSocket serverSocket = new ServerSocket(2003)) {
 
+                int count = 0;
                 while (true) {
+                    System.out.println("Creating thread =" + count++);
+
+                    final Socket clientConnection = serverSocket.accept();
+
                     new Thread() {
 
                         @Override
                         public void run() {
-                            try (Socket clientConnection = serverSocket.accept();
-                                 InputStream clientInputStream = clientConnection.getInputStream();
+                            System.out.println("Executing run method");
+                            try (InputStream clientInputStream = clientConnection.getInputStream();
                                  BufferedReader clientBufferedReader = new BufferedReader(new InputStreamReader(clientInputStream));) {
 
+                                System.out.println("Got client connection");
                                 String clientInput;
                                 SocketAddress remoteSocketAddress = clientConnection.getRemoteSocketAddress();
 
