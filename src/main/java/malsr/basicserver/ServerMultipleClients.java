@@ -15,7 +15,7 @@ public class ServerMultipleClients {
 
                     final Socket clientConnection = serverSocket.accept();
                     System.out.println("Creating thread =" + count++);
-                    
+
                     handleClientRequest(clientConnection);
                 }
             } catch (IOException e) {
