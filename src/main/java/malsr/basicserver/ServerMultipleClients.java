@@ -9,6 +9,7 @@ public class ServerMultipleClients {
 
     public static void main(String[] args) throws IOException {
         boolean listenForClientConnection = true;
+
         try (final ServerSocket serverSocket = new ServerSocket(2003)) {
                 int count = 1;
                 while (listenForClientConnection) {
@@ -24,27 +25,24 @@ public class ServerMultipleClients {
     }
 
     private static void handleClientRequest(final Socket clientConnection) {
-        Thread clientRequestThread = new Thread() {
+        Thread clientRequestThread = new Thread(() -> {
+            System.out.println("Executing run method");
 
-            @Override
-            public void run() {
-                System.out.println("Executing run method");
-                try (InputStream clientInputStream = clientConnection.getInputStream();
-                     InputStreamReader inputStreamReader = new InputStreamReader(clientInputStream);
-                     BufferedReader clientBufferedReader = new BufferedReader(inputStreamReader)) {
+            try (InputStream clientInputStream = clientConnection.getInputStream();
+                 InputStreamReader inputStreamReader = new InputStreamReader(clientInputStream);
+                 BufferedReader clientBufferedReader = new BufferedReader(inputStreamReader)) {
 
-                    System.out.println("Got client connection");
-                    String clientInput;
-                    SocketAddress remoteSocketAddress = clientConnection.getRemoteSocketAddress();
+                System.out.println("Got client connection");
+                String clientInput;
+                SocketAddress remoteSocketAddress = clientConnection.getRemoteSocketAddress();
 
-                    while ((clientInput = clientBufferedReader.readLine()) != null) {
-                        System.out.println("Client " + remoteSocketAddress + " said = " + clientInput);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                while ((clientInput = clientBufferedReader.readLine()) != null) {
+                    System.out.println("Client " + remoteSocketAddress + " said = " + clientInput);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        };
+        });
 
         clientRequestThread.start();
     }
